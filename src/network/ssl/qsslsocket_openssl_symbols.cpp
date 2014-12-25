@@ -231,12 +231,20 @@ DEFINEFUNC(const SSL_METHOD *, SSLv2_client_method, DUMMYARG, DUMMYARG, return 0
 DEFINEFUNC(const SSL_METHOD *, SSLv3_client_method, DUMMYARG, DUMMYARG, return 0, return)
 DEFINEFUNC(const SSL_METHOD *, SSLv23_client_method, DUMMYARG, DUMMYARG, return 0, return)
 DEFINEFUNC(const SSL_METHOD *, TLSv1_client_method, DUMMYARG, DUMMYARG, return 0, return)
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+DEFINEFUNC(const SSL_METHOD *, TLSv1_1_client_method, DUMMYARG, DUMMYARG, return 0, return)
+DEFINEFUNC(const SSL_METHOD *, TLSv1_2_client_method, DUMMYARG, DUMMYARG, return 0, return)
+#endif
 #ifndef OPENSSL_NO_SSL2
 DEFINEFUNC(const SSL_METHOD *, SSLv2_server_method, DUMMYARG, DUMMYARG, return 0, return)
 #endif
 DEFINEFUNC(const SSL_METHOD *, SSLv3_server_method, DUMMYARG, DUMMYARG, return 0, return)
 DEFINEFUNC(const SSL_METHOD *, SSLv23_server_method, DUMMYARG, DUMMYARG, return 0, return)
 DEFINEFUNC(const SSL_METHOD *, TLSv1_server_method, DUMMYARG, DUMMYARG, return 0, return)
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+DEFINEFUNC(const SSL_METHOD *, TLSv1_1_server_method, DUMMYARG, DUMMYARG, return 0, return)
+DEFINEFUNC(const SSL_METHOD *, TLSv1_2_server_method, DUMMYARG, DUMMYARG, return 0, return)
+#endif
 #else
 DEFINEFUNC(SSL_METHOD *, SSLv2_client_method, DUMMYARG, DUMMYARG, return 0, return)
 DEFINEFUNC(SSL_METHOD *, SSLv3_client_method, DUMMYARG, DUMMYARG, return 0, return)
@@ -691,10 +699,18 @@ bool q_resolveOpenSslSymbols()
     RESOLVEFUNC(SSLv3_client_method, 195, libs.first )
     RESOLVEFUNC(SSLv23_client_method, 189, libs.first )
     RESOLVEFUNC(TLSv1_client_method, 198, libs.first )
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+    RESOLVEFUNC(TLSv1_1_client_method, 300, libs.first )
+    RESOLVEFUNC(TLSv1_2_client_method, 301, libs.first )
+#endif
     RESOLVEFUNC(SSLv2_server_method, 194, libs.first )
     RESOLVEFUNC(SSLv3_server_method, 197, libs.first )
     RESOLVEFUNC(SSLv23_server_method, 191, libs.first )
     RESOLVEFUNC(TLSv1_server_method, 200, libs.first )
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+    RESOLVEFUNC(TLSv1_1_server_method, 400, libs.first )
+    RESOLVEFUNC(TLSv1_2_server_method, 401, libs.first )
+#endif
     RESOLVEFUNC(SSL_CTX_load_verify_locations, 34, libs.first )
     RESOLVEFUNC(X509_NAME_entry_count, 1821, libs.second )
     RESOLVEFUNC(X509_NAME_get_entry, 1823, libs.second )
