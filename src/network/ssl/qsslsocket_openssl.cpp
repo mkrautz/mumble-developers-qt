@@ -287,10 +287,10 @@ init_context:
     case QSsl::TlsV1_0:
         ctx = q_SSL_CTX_new(client ? q_TLSv1_client_method() : q_TLSv1_server_method());
         break;
-    case QSsl::Tlsv1_1:
+    case QSsl::TlsV1_1:
         ctx = q_SSL_CTX_new(client ? q_TLSv1_1_client_method() : q_TLSv1_1_server_method());
         break;
-    case QSsl::Tlsv1_2:
+    case QSsl::TlsV1_2:
         ctx = q_SSL_CTX_new(client ? q_TLSv1_2_client_method() : q_TLSv1_2_server_method());
         break;
     }

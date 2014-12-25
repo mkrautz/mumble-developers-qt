@@ -842,12 +842,20 @@ bool q_resolveOpenSslSymbols()
     RESOLVEFUNC(SSLv3_client_method)
     RESOLVEFUNC(SSLv23_client_method)
     RESOLVEFUNC(TLSv1_client_method)
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+    RESOLVEFUNC(TLSv1_1_client_method)
+    RESOLVEFUNC(TLSv1_2_client_method)
+#endif
 #ifndef OPENSSL_NO_SSL2
     RESOLVEFUNC(SSLv2_server_method)
 #endif
     RESOLVEFUNC(SSLv3_server_method)
     RESOLVEFUNC(SSLv23_server_method)
     RESOLVEFUNC(TLSv1_server_method)
+#if OPENSSL_VERSION_NUMBER >= 0x10001000L
+    RESOLVEFUNC(TLSv1_1_server_method)
+    RESOLVEFUNC(TLSv1_2_server_method)
+#endif
     RESOLVEFUNC(X509_NAME_entry_count)
     RESOLVEFUNC(X509_NAME_get_entry)
     RESOLVEFUNC(X509_NAME_ENTRY_get_data)

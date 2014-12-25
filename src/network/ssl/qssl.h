@@ -77,11 +77,11 @@ namespace QSsl {
         SslV3,
         SslV2,
         TlsV1_0,
+        TlsV1 = TlsV1_0,
         AnyProtocol,
         TlsV1SslV3,
         SecureProtocols,
 
-        TlsV1 = TlsV1_0,
         TlsV1_1,
         TlsV1_2,
 
