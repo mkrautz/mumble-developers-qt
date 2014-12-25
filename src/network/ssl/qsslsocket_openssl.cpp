@@ -212,7 +212,11 @@ QSslCipher QSslSocketBackendPrivate::QSslCipher_from_SSL_CIPHER(SSL_CIPHER *ciph
         else if (protoString == QLatin1String("SSLv2"))
             ciph.d->protocol = QSsl::SslV2;
         else if (protoString == QLatin1String("TLSv1"))
-            ciph.d->protocol = QSsl::TlsV1;
+            ciph.d->protocol = QSsl::TlsV1_0;
+        else if (protoString == QLatin1String("TLSv1.1"))
+            ciph.d->protocol = QSsl::TlsV1_1;
+        else if (protoString == QLatin1String("TLSv1.2"))
+            ciph.d->protocol = QSsl::TlsV1_2;
 
         if (descriptionList.at(2).startsWith(QLatin1String("Kx=")))
             ciph.d->keyExchangeMethod = descriptionList.at(2).mid(3);
@@ -258,7 +262,7 @@ bool QSslSocketBackendPrivate::initSslContext()
 {
     Q_Q(QSslSocket);
 
-    // Create and initialize SSL context. Accept SSLv2, SSLv3 and TLSv1.
+    // Create and initialize SSL context. Accept SSLv2, SSLv3, TLSv1_0, TLSv1_1 and TLSv1_2.
     bool client = (mode == QSslSocket::SslClientMode);
 
     bool reinitialized = false;
@@ -280,8 +284,14 @@ init_context:
     default:
         ctx = q_SSL_CTX_new(client ? q_SSLv23_client_method() : q_SSLv23_server_method());
         break;
-    case QSsl::TlsV1:
+    case QSsl::TlsV1_0:
         ctx = q_SSL_CTX_new(client ? q_TLSv1_client_method() : q_TLSv1_server_method());
+        break;
+    case QSsl::TlsV1_1:
+        ctx = q_SSL_CTX_new(client ? q_TLSv1_1_client_method() : q_TLSv1_1_server_method());
+        break;
+    case QSsl::TlsV1_2:
+        ctx = q_SSL_CTX_new(client ? q_TLSv1_2_client_method() : q_TLSv1_2_server_method());
         break;
     }
     if (!ctx) {
@@ -446,7 +456,9 @@ init_context:
 
 #if OPENSSL_VERSION_NUMBER >= 0x0090806fL && !defined(OPENSSL_NO_TLSEXT)
     if ((configuration.protocol == QSsl::TlsV1SslV3 ||
-        configuration.protocol == QSsl::TlsV1 ||
+        configuration.protocol == QSsl::TlsV1_0 ||
+        configuration.protocol == QSsl::TlsV1_1 ||
+        configuration.protocol == QSsl::TlsV1_2 ||
         configuration.protocol == QSsl::SecureProtocols ||
         configuration.protocol == QSsl::AnyProtocol) &&
         client && q_SSLeay() >= 0x00090806fL) {
