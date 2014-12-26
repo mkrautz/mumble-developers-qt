@@ -82,6 +82,7 @@ namespace QSsl {
         TlsV1SslV3,
         SecureProtocols,
 
+        TlsV1OrGreater,
         TlsV1_1,
         TlsV1_2,
 
