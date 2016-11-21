@@ -5389,7 +5389,8 @@ void QPainter::drawPixmap(const QPointF &p, const QPixmap &pm)
             x += d->state->matrix.dx();
             y += d->state->matrix.dy();
         }
-        d->engine->drawPixmap(QRectF(x, y, w, h), pm, QRectF(0, 0, w, h));
+        int scale = pm.devicePixelRatio();
+        d->engine->drawPixmap(QRectF(x, y, w / scale, h / scale), pm, QRectF(0, 0, w, h));
     }
 }
 
@@ -5419,6 +5420,11 @@ void QPainter::drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr)
     qreal sw = sr.width();
     qreal sh = sr.height();
 
+    // Get pixmap scale. Use it when calculating the target
+    // rect size from pixmap size. For example, a 2X 64x64 pixel
+    // pixmap should result in a 32x32 point target rect.
+    const int pmscale = pm.devicePixelRatio();
+
     // Sanity-check clipping
     if (sw <= 0)
         sw = pm.width() - sx;
@@ -5427,9 +5433,9 @@ void QPainter::drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr)
         sh = pm.height() - sy;
 
     if (w < 0)
-        w = sw;
+        w = sw / pmscale;
     if (h < 0)
-        h = sh;
+        h = sh / pmscale;
 
     if (sx < 0) {
         qreal w_ratio = sx * w/sw;
@@ -5518,7 +5524,7 @@ void QPainter::drawPixmap(const QRectF &r, const QPixmap &pm, const QRectF &sr)
             x += d->state->matrix.dx();
             y += d->state->matrix.dy();
         }
-        d->engine->drawPixmap(QRectF(x, y, w, h), pm, QRectF(sx, sy, sw, sh));
+        d->engine->drawPixmap(QRectF(x, y, w , h), pm, QRectF(sx, sy, sw, sh));
     }
 }
 
@@ -5677,7 +5683,8 @@ void QPainter::drawImage(const QPointF &p, const QImage &image)
         y += d->state->matrix.dy();
     }
 
-    d->engine->drawImage(QRectF(x, y, w, h), image, QRectF(0, 0, w, h), Qt::AutoColor);
+    int scale = image.devicePixelRatio();
+    d->engine->drawImage(QRectF(x, y, w / scale, h / scale), image, QRectF(0, 0, w, h), Qt::AutoColor);
 }
 
 void QPainter::drawImage(const QRectF &targetRect, const QImage &image, const QRectF &sourceRect,
@@ -5696,6 +5703,7 @@ void QPainter::drawImage(const QRectF &targetRect, const QImage &image, const QR
     qreal sy = sourceRect.y();
     qreal sw = sourceRect.width();
     qreal sh = sourceRect.height();
+    int imageScale = image.devicePixelRatio();
 
     // Sanity-check clipping
     if (sw <= 0)
@@ -5705,9 +5713,9 @@ void QPainter::drawImage(const QRectF &targetRect, const QImage &image, const QR
         sh = image.height() - sy;
 
     if (w < 0)
-        w = sw;
+        w = sw / imageScale;
     if (h < 0)
-        h = sh;
+        h = sh / imageScale;
 
     if (sx < 0) {
         qreal w_ratio = sx * w/sw;

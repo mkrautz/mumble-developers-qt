@@ -128,6 +128,7 @@
 #include <qsize.h>
 #include <qcolor.h>
 #include <qvariant.h>
+#include <qdebug.h>
 
 // factory loader
 #include <qcoreapplication.h>
@@ -1261,6 +1262,11 @@ bool QImageReader::read(QImage *image)
                     *image = image->copy(d->scaledClipRect);
             }
         }
+    }
+
+    // successful read; check for "@2x" suffix and set scale factor
+    if (QFileInfo(fileName()).baseName().endsWith("@2x")) {
+        image->setDevicePixelRatio(2.0);
     }
 
     return true;

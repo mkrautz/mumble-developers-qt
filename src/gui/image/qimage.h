@@ -215,6 +215,9 @@ public:
     QVector<QRgb> colorTable() const;
     void setColorTable(const QVector<QRgb> colors);
 
+    qreal devicePixelRatio() const;
+    void setDevicePixelRatio(qreal scale);
+
     void fill(uint pixel);
     void fill(const QColor &color);
     void fill(Qt::GlobalColor color);

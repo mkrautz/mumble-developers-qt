@@ -240,6 +240,7 @@ void QMacPixmapData::fromImage(const QImage &img,
     h = img.height();
     is_null = (w <= 0 || h <= 0);
     d = (pixelType() == BitmapType ? 1 : img.depth());
+    devicePixelRatio = img.devicePixelRatio();
 
     QImage image = img;
     int dd = QPixmap::defaultDepth();
@@ -391,6 +392,8 @@ QImage QMacPixmapData::toImage() const
         // exit if image was not created (out of memory)
     if (image.isNull())
         return image;
+    image.setDevicePixelRatio(devicePixelRatio);
+
     quint32 *sptr = pixels, *srow;
     const uint sbpr = bytesPerRow;
     if (format == QImage::Format_MonoLSB) {
@@ -487,6 +490,10 @@ void QMacPixmapData::setMask(const QBitmap &mask)
 
 int QMacPixmapData::metric(QPaintDevice::PaintDeviceMetric theMetric) const
 {
+
+
+    extern float qt_mac_defaultDpi_x(); //qpaintdevice_mac.cpps
+    extern float qt_mac_defaultDpi_y(); //qpaintdevice_mac.cpp
     switch (theMetric) {
     case QPaintDevice::PdmWidth:
         return w;
@@ -499,14 +506,14 @@ int QMacPixmapData::metric(QPaintDevice::PaintDeviceMetric theMetric) const
     case QPaintDevice::PdmNumColors:
         return 1 << d;
     case QPaintDevice::PdmDpiX:
-    case QPaintDevice::PdmPhysicalDpiX: {
-        extern float qt_mac_defaultDpi_x(); //qpaintdevice_mac.cpp
         return int(qt_mac_defaultDpi_x());
+    case QPaintDevice::PdmPhysicalDpiX: {
+        return int(qt_mac_defaultDpi_x() * devicePixelRatio);
     }
     case QPaintDevice::PdmDpiY:
+        return int(qt_mac_defaultDpi_x());
     case QPaintDevice::PdmPhysicalDpiY: {
-        extern float qt_mac_defaultDpi_y(); //qpaintdevice_mac.cpp
-        return int(qt_mac_defaultDpi_y());
+        return int(qt_mac_defaultDpi_y() * devicePixelRatio);
     }
     case QPaintDevice::PdmDepth:
         return d;
@@ -1200,6 +1207,7 @@ void QMacPixmapData::copy(const QPixmapData *data, const QRect &rect)
     has_alpha = macData->has_alpha;
     has_mask = macData->has_mask;
     uninit = false;
+    devicePixelRatio = macData->devicePixelRatio;
 
     const int x = rect.x();
     const int y = rect.y();

@@ -155,6 +155,7 @@ protected:
     int h;
     int d;
     bool is_null;
+    qreal devicePixelRatio;
 
 private:
     friend class QPixmap;

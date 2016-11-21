@@ -644,10 +644,11 @@ QSize QLabelPrivate::sizeForWidth(int w) const
     int vextra = hextra;
     QFontMetrics fm = q->fontMetrics();
 
-    if (pixmap && !pixmap->isNull())
+    if (pixmap && !pixmap->isNull()) {
         br = pixmap->rect();
+        br.setSize(br.size() / pixmap->devicePixelRatio());
 #ifndef QT_NO_PICTURE
-    else if (picture && !picture->isNull())
+    } else if (picture && !picture->isNull())
         br = picture->boundingRect();
 #endif
 #ifndef QT_NO_MOVIE
